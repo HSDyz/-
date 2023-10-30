@@ -1,0 +1,44 @@
+from geopy.distance import geodesic
+import pandas as pd
+import numpy
+# 创建一个DataFrame，用于存储距离数据
+df = pd.DataFrame(columns=['距离'])
+
+# 定义计算距离的函数
+def calculate_distance(coord1, coord2):
+    """
+    计算两个经纬度坐标之间的距离
+
+    :param coord1: 第一个坐标，格式为 (纬度, 经度)
+    :param coord2: 第二个坐标，格式为 (纬度, 经度)
+    :return: 距离（单位：千米）
+    """
+    distance = geodesic(coord1, coord2).kilometers
+    return distance
+
+# 指定开始行和结束行
+start_row = 0  # 开始行索引（包含）
+end_row =  input("请输入结束行：") # 结束行索引（不包含）
+
+# 循环读取坐标并计算距离
+data = pd.read_excel('D:\PublicAccount\dizhi.xlsx', skiprows=start_row, nrows=end_row-start_row)
+
+for i in range(end_row - start_row):
+    # 提取coordinate1的数值
+    coordinate1 = (data['纬度'][i], data['经度'][i])  # 假设纬度列名为"纬度"，经度列名为"经度"
+
+    # 示例坐标
+    coordinate2 = (30.58310,103.90414)  # 监测点经纬度坐标
+
+    # 计算距离并保留两位小数
+    distance = round(calculate_distance(coordinate1, coordinate2), 2)
+
+    # 将距离数据添加到DataFrame中，并添加单位
+    df.loc[len(df)] = [[f"{distance} km"]]
+
+# 将DataFrame保存到Excel文件中
+df.to_excel('D:\PublicAccount\juli.xlsx', index=False)
+
+# 从Excel文件中读取数据并显示
+data = pd.read_excel('D:\PublicAccount\juli.xlsx')
+data.head()
