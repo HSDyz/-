@@ -1,0 +1,29 @@
+import pandas as pd
+
+# 加载原始数据
+data = pd.read_excel('D:\PublicAccount\juli.xlsx')
+
+# 定义分类函数
+def categorize_distance(distance):
+    if distance <= 0.5:
+        category = '0.5'
+    elif distance <= 1.0:
+        category = '1.0'
+    elif distance <= 1.5:
+        category = '1.5'
+    elif distance <= 2.0:
+        category = '2.0'
+    elif distance <= 2.5:
+        category = '2.5'
+    elif distance <= 3.0:
+        category = '3.0'
+    else:
+        category = '远距离'
+    return category
+
+# 应用分类函数并将结果保存到新列中
+data['category'] = data['距离'].apply(categorize_distance)
+
+# 保存结果到原始文件
+data.to_excel('D:\PublicAccount\juli.xlsx', index=False)
+data.head()
